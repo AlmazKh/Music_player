@@ -1,8 +1,13 @@
 package com.example.almaz.musicplayer;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +16,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class Player extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class Player extends AppCompatActivity implements SongCallback, ServiceConnection {
 
     Button btnPrevious;
     Button btnPlay;
@@ -23,6 +30,9 @@ public class Player extends AppCompatActivity {
     TextView tvTrackName;
     MediaPlayer mediaPlayer;
     int totalTime;
+    ArrayList<Track> tracks;
+    int currentSong;
+    PlayerService playerService;
 //    final String DATA_SD = Environment
 //            .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 //            + "/music.mp3";
@@ -31,16 +41,17 @@ public class Player extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        tracks = MainActivity.getPlaylist();
         btnPrevious = (Button)findViewById(R.id.btn_previous);
         btnPlay = (Button)findViewById(R.id.btn_play);
         btnNext = (Button)findViewById(R.id.btn_next);
         tvCurrentTime = (TextView)findViewById(R.id.tv_current_time);
         tvRemainingTime = (TextView)findViewById(R.id.tv_remaining_time);
         tvTrackName = (TextView)findViewById(R.id.tv_track_name);
-        mediaPlayer = MediaPlayer.create(this, R.raw.track_5);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.setVolume(0.5f, 0.5f);
+//        mediaPlayer = MediaPlayer.create(this, R.raw.track_5);
+//        mediaPlayer.setLooping(true);
+//        mediaPlayer.seekTo(0);
+//        mediaPlayer.setVolume(0.5f, 0.5f);
         totalTime = mediaPlayer.getDuration();
         positionBar = (SeekBar)findViewById(R.id.seekBar_position);
         positionBar.setMax(totalTime);
@@ -102,6 +113,12 @@ public class Player extends AppCompatActivity {
                 }
             }
         }).start();
+
+        tvTrackName = findViewById(R.id.tv_track_name);
+        update();
+        Intent intent = new Intent(this, PlayerService.class);
+        startService(intent);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
     @SuppressLint("HandlerLeak")
@@ -144,9 +161,37 @@ public class Player extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_previous:
-
+                currentSong--;
+                if(currentSong == -1) {
+                    currentSong = tracks.size() - 1;
+                }
+                playerService.previous();
             case R.id.btn_next:
-
+                currentSong++;
+                if(currentSong == tracks.size()) {
+                    currentSong = 0;
+                }
+                playerService.next();
         }
+    }
+
+    @Override
+    public void songClick(int id) {
+        currentSong = id;
+        update();
+    }
+
+    public void update() {
+        tvTrackName.setText(tracks.get(currentSong).getTrackName());
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
     }
 }

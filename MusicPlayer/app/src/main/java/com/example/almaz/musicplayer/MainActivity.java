@@ -1,16 +1,11 @@
 package com.example.almaz.musicplayer;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ListView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SongCallback {
@@ -26,10 +21,10 @@ public class MainActivity extends AppCompatActivity implements SongCallback {
         mRecyclerView.setLayoutManager(mLayoutManager);
         appAdapter = new TrackAdapter(new AppListDiffCallback(), this);
         mRecyclerView.setAdapter(appAdapter);
-        appAdapter.submitList(getMyList());
+        appAdapter.submitList(getPlaylist());
     }
 
-    public static ArrayList<Track> getMyList() {
+    public static ArrayList<Track> getPlaylist() {
         ArrayList<Track> tracks = new ArrayList<>();
         tracks.add(new Track(R.raw.track_1, "Track 1", "Singer"));
         tracks.add(new Track(R.raw.track_2, "Track 2", "Singer"));
