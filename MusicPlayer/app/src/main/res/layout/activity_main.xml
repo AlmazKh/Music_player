@@ -8,10 +8,15 @@
     android:orientation="vertical"
     tools:context="com.example.almaz.musicplayer.MainActivity">
 
-    <ListView
-        android:id="@+id/lv_songs"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_tracks"
+            android:layout_marginTop="?android:actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </FrameLayout>
 
 </FrameLayout>

@@ -2,7 +2,6 @@ package com.example.almaz.musicplayer;
 
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +37,7 @@ public class Player extends AppCompatActivity {
         tvCurrentTime = (TextView)findViewById(R.id.tv_current_time);
         tvRemainingTime = (TextView)findViewById(R.id.tv_remaining_time);
         tvTrackName = (TextView)findViewById(R.id.tv_track_name);
-        mediaPlayer = MediaPlayer.create(this, R.raw.lost_stars);
+        mediaPlayer = MediaPlayer.create(this, R.raw.track_5);
         mediaPlayer.setLooping(true);
         mediaPlayer.seekTo(0);
         mediaPlayer.setVolume(0.5f, 0.5f);
